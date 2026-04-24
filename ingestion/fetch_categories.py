@@ -15,3 +15,7 @@ def fetch_categories(parent=None):
 if __name__ == "__main__":
     categories = fetch_categories()
     print(categories)
+
+
+
+    

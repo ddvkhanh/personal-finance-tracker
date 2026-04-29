@@ -25,6 +25,7 @@ def fetch_transactions(size=None, status=None, since=None, until=None, category=
                 "name": "transactions",
                 "endpoint": {
                     "path":GET_TRANSACTIONS_ENDPOINT,
+                    "data_selector": "data",
                     "params": params,
                     "paginator": {
                         "type": "json_link",

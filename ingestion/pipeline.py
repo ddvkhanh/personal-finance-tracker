@@ -1,6 +1,5 @@
 import dlt
-import duckdb
-
+from datetime import datetime, timedelta, timezone
 from accounts import fetch_accounts
 from categories import fetch_categories
 from transactions import fetch_transactions
@@ -11,20 +10,22 @@ DATASET_NAME = "rest_api_data"
 DESTINATION = "duckdb"
 
 def run():
-   pipeline = dlt.pipeline(
+    now = datetime.now(timezone.utc)
+    since = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0).isoformat()
+    until = (now - timedelta(days=1)).replace(hour=23, minute=59, second=59).isoformat()
+
+    pipeline = dlt.pipeline(
         pipeline_name=PIPELINE_NAME,
         destination=DESTINATION,
         dataset_name=DATASET_NAME,
     )
    
-   load_info = pipeline.run([
-        fetch_transactions(size=10),
-        fetch_accounts(size=4),
+    pipeline.run([
+        fetch_transactions(since=since, until=until),
+        fetch_accounts(),
         fetch_categories()
     ])
    
-   print(load_info)
-
 if __name__ == "__main__":
     run()
     

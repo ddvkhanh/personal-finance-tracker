@@ -1,0 +1,36 @@
+id: personal-finance-tracker
+namespace: personal-finance-tracker
+description: A personal finance tracker pipeline that collects, processes, and analyzes financial data.
+
+tasks:
+  - id: collect-data
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: clone_ingest_repo
+        type: io.kestra.plugin.git.Clone
+        url: https://github.com/ddvkhanh/personal-finance-tracker
+        branch: master
+
+      - id: init_pipeline
+        type: io.kestra.plugin.dlt.CLI
+        beforeCommands:
+          - pip install "dlt[duckdb]>=1.16.0"
+        commands:
+          - python ingestion/pipeline.py
+        env:
+          SOURCES__API_TOKEN: "{{ secret('UP_BANK_TOKEN') }}"
+        outputFiles:
+          - "rest_api.duckdb"
+        
+      - id: duckdb
+        type: io.kestra.plugin.jdbc.duckdb.Query
+        databaseUri: "{{ outputs.init_pipeline.outputFiles['rest_api.duckdb'] }}"
+        sql: "SELECT * FROM rest_api_data.accounts LIMIT 10"
+        store: true
+
+
+triggers:
+  - id: schedule_trigger
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 23 * * *"
+    timezone: "Australia/Melbourne"

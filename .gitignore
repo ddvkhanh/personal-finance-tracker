@@ -3,3 +3,6 @@
 .venv/
 secrets.toml
 ingestion/rest_api.duckdb
+
+postman/
+.postman

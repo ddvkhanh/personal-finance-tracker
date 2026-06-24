@@ -7,5 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "dlt[duckdb]>=1.25.0",
     "dotenv>=0.9.9",
+    "faker>=40.23.0",
+    "httpx>=0.28.1",
     "requests>=2.33.1",
 ]

@@ -1,8 +1,16 @@
+import json
+import os
 from random import choice, randint
 import time
+import dotenv
 import httpx
 from faker import Faker
+import hmac
+import hashlib
+from datetime import datetime, timezone
 
+dotenv.load_dotenv()
+SECRET = os.getenv("SECRET")
 fake = Faker()
 
 CATEGORIES = [
@@ -84,11 +92,23 @@ def generate_transaction_payload():
     }
     return payload
 
+def generate_signature(message: bytes) -> str:
+    """
+    UP API expects a SHA-256 HMAC signature.
+    """
+    key_bytes = SECRET.encode("utf-8")
+
+    signature = hmac.new(key_bytes, message, hashlib.sha256).hexdigest()
+    return signature
+
 def main(interval_seconds=5):
     while True:
-        payload = generate_transaction_payload()
-        response = httpx.post(RECEIVER_URL, json=payload)
-        print(f"Sent payload: {payload['data']['id']} with status code: {response.status_code}")
+        payload_dict = generate_transaction_payload()
+        payload_bytes = json.dumps(payload_dict).encode("utf-8")
+        signature = generate_signature(payload_bytes)
+        headers = {"X-Up-Authenticity-Signature": signature}
+        response = httpx.post(RECEIVER_URL, content=payload_bytes, headers=headers)  # ✅
+        print(f"Sent payload: {payload_dict['data']['id']} with status code: {response.status_code}")
         time.sleep(interval_seconds)
 
 if __name__ == "__main__":

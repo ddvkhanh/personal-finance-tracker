@@ -3,11 +3,11 @@ from fastapi import FastAPI, Request
 import os
 import hashlib
 import dotenv
+from receiver.producer import publish
 dotenv.load_dotenv()
 
 
 SECRET = os.getenv("SECRET")
-
 app = FastAPI()
 
 @app.post("/webhook")
@@ -20,4 +20,5 @@ async def handle_webhook(request: Request) :
     if not hmac.compare_digest(recieve_signature, expected_signature):
         return {"message": "Unauthorized"}, 400
     
+    publish(body)
     return {"message": "Success"}, 200

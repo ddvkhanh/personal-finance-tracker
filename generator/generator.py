@@ -7,7 +7,6 @@ import httpx
 from faker import Faker
 import hmac
 import hashlib
-from datetime import datetime, timezone
 
 dotenv.load_dotenv()
 SECRET = os.getenv("SECRET")
@@ -73,21 +72,36 @@ def generate_transaction_payload():
             "type": "transactions",
             "id": fake.uuid4(),
             "attributes": {
-            "status": choice(STATUS),
-            "rawText": fake.company(),
-            "description": fake.company(),
-            "amount": {
-                "currencyCode": "AUD",
-                "value": value,
-                "valueInBaseUnits": valueInBaseUnits
-            },
-            "settledAt": None,
-            "createdAt": fake.iso8601()
+                "status": choice(STATUS),
+                "rawText": fake.company(),
+                "description": fake.company(),
+                "message": None,
+                "isCategorizable": True,
+                "holdInfo": None,
+                "roundUp": None,
+                "cashback": None,
+                "amount": {
+                    "currencyCode": "AUD",
+                    "value": value,
+                    "valueInBaseUnits": valueInBaseUnits
+                },
+                "foreignAmount": None,
+                "cardPurchaseMethod": None,
+                "settledAt": None,
+                "createdAt": fake.iso8601(),
+                "transactionType": "Purchase",
+                "note": None,
+                "performingCustomer": None,
+                "deepLinkURL": None
             },
             "relationships": {
-            "account": { "data": { "type": "accounts", "id": ACCOUNT_ID } },
-            "category": { "data": { "type": "categories", "id": choice(CATEGORIES) } }
-            }
+                "account": {"data": {"type": "accounts", "id": ACCOUNT_ID}},
+                "transferAccount": {"data": None},
+                "category": {"data": {"type": "categories", "id": choice(CATEGORIES)}},
+                "parentCategory": {"data": None},
+                "tags": {"data": []},
+                "attachment": {"data": None}
+            },
         }
     }
     return payload

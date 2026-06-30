@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "confluent-kafka>=2.14.2",
+    "dbt-core>=1.11.11",
+    "dbt-postgres>=1.10.2",
     "dlt[duckdb]>=1.25.0",
     "dotenv>=0.9.9",
     "faker>=40.23.0",

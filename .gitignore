@@ -7,3 +7,5 @@ postman/
 .postman
 
 *.duckdb
+*.log
+.gitkeep

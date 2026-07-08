@@ -49,7 +49,8 @@ while True:
     cur.execute(
         """
         INSERT INTO transactions_raw (event_type, response, received_at)
-        VALUES ( %s, %s::jsonb, %s)""",
+        VALUES ( %s, %s::jsonb, %s)
+        ON CONFLICT (transaction_id, event_type) DO NOTHING
+        """,
         (event_type, json.dumps(payload), datetime.now())
-        
     )

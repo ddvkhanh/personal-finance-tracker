@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_transactions_raw
+    description: "Renamed/cast passthrough of raw transaction events. One row per event received (a transaction can appear more than once, e.g. CREATED then SETTLED)."
+    columns:
+      - name: id
+        description: "Raw table surrogate key."
+        tests:
+          - unique
+          - not_null
+      - name: transaction_id
+        description: "UP Bank transaction id, not unique at this grain."
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['HELD', 'SETTLED']
+      - name: amount
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null

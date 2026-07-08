@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: raw_data
-    database: personal_finance_tracker
+    database: pg
     schema: public
     tables:
       - name: transactions_raw

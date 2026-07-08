@@ -57,6 +57,7 @@ CATEGORIES = [
 STATUS = ["HELD", "SETTLED"]
 ACCOUNT_ID = "a1b2c3d4-0000-0000-0000-000000000000"
 RECEIVER_URL = "http://localhost:8000/webhook"
+DAYS_BACK = 90
 
 
 def generate_transaction_payload():
@@ -64,6 +65,7 @@ def generate_transaction_payload():
     amount_cents = randint(100, 10000)
     value = f"-{amount_cents / 100:.2f}"
     valueInBaseUnits = -amount_cents
+    created_at = fake.date_time_between(start_date=f"-{DAYS_BACK}d", end_date="now").isoformat()
 
     payload = {
     "type": "TRANSACTION_CREATED",
@@ -88,7 +90,7 @@ def generate_transaction_payload():
                 "foreignAmount": None,
                 "cardPurchaseMethod": None,
                 "settledAt": None,
-                "createdAt": fake.iso8601(),
+                "createdAt": created_at,
                 "transactionType": "Purchase",
                 "note": None,
                 "performingCustomer": None,

@@ -1,7 +1,7 @@
 SELECT
-    category_id,
+    transaction_id,
     created_at::date as transaction_date,
-    count(*) as transaction_count,
-    sum(amount) as total_amount
-FROM {{ ref('stg_transactions_raw') }}
-GROUP BY 1, 2
+    category_id,
+    status,
+    amount
+FROM {{ ref('int_transactions_dedup') }}

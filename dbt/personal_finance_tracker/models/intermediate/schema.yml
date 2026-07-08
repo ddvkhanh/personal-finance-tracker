@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: int_transactions_dedup
+    description: "One row per transaction_id, keeping the most recently received event."
+    columns:
+      - name: transaction_id
+        tests:
+          - unique
+          - not_null
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['HELD', 'SETTLED']

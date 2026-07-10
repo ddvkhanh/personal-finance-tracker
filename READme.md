@@ -10,6 +10,9 @@ UP Bank webhook / generator → FastAPI receiver → Redpanda → consumer → P
                                                                        Streamlit
 ```
 
+![Personal Finance Data Streaming Pipeline](images/Personal_Finance_Data_Streaming_Pipeline.png)
+
+
 ## Prerequisites
 
 - Docker Desktop running
